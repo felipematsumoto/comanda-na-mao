@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'comanda_na_mao.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'comanda_na_mao',
+	'USER': 'root',
+	'PASSWORD': 'mypass',
+	'HOST': 'localhost',
+	'PORT': '3306',
     }
 }
 
