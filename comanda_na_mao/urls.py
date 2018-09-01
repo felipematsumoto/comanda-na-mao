@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from cardapio.views import add_cardapio
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('add_cardapio/', add_cardapio),
 ]
