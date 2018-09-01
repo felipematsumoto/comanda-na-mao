@@ -21,7 +21,7 @@ function jsbinShowEdit(options) {
   style.setAttribute('href', options['static'] + '/css/edit.css');
   doc.documentElement.appendChild(style);
 
-
+/*
   // show / hide button:
   btn.onmouseover = btn.onmouseout = function() {
     over = !over;
@@ -42,3 +42,4 @@ function jsbinShowEdit(options) {
   if (aEL in doc) {doc[aEL]('mousemove', show, false);}
   else {doc.attachEvent('mousemove', show);}
 }
+*/

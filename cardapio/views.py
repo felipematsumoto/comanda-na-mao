@@ -4,10 +4,13 @@ from django.http import JsonResponse
 from .forms import ProdutoCardapioForm
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
+from . import models as cardapio_models
+import os
+
+@csrf_exempt
 def index(request):
     template = loader.get_template("cardapio/Galeria.html")
-    context = {}
-    return HttpResponse(template.render(context, request))
+    return HttpResponse(template.render({}, request))
 
 @csrf_exempt
 def add_cardapio(request):
@@ -21,5 +24,12 @@ def add_cardapio(request):
     else:
         return HttpResponse(status=405)
 
+@csrf_exempt
 def busca_cardapio(request):
-    return HttpResponse("<h1>Busca Cardapio</h1>")
+    template = loader.get_template("cardapio/Galeria.html")
+    produtos = cardapio_models.ProdutoCardapio.objects.all().filter(nome__icontains=request.POST.get('procura'))
+    menu = []
+    for p in produtos:
+        print(str(os.path.basename(p.foto.name)))
+        menu.append({"Nome": str(p.nome), "Arquivo": "cardapio/fotosCardapio/" + str(os.path.basename(p.foto.name))})
+    return HttpResponse(template.render({'menu':menu}, request))
