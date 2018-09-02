@@ -1,5 +1,6 @@
+
 from django.apps import AppConfig
 
 
-class RestauranteConfig(AppConfig):
-    name = 'restaurante'
+class CardapioConfig(AppConfig):
+    name = 'cardapio'
