@@ -90,23 +90,26 @@
   
 </head>
 <center>
-<form id="searchform" action="{% url 'busca_cardapio' %}" method="GET" accept-charset="utf-8">
+<form id="searchform" action="{% url 'busca_restaurante' %}" method="GET" accept-charset="utf-8">
   <input name="procura" type="text">
   <input type="submit"></input>
 </form>
 </center>
 <body class="no-touch">
   <div class="wrap">
-    {% for c in menu %}
+    {% for c in context %}
     {% static "" as base %}
-    <div class="box">
-      <div class="boxInner">
-        <img src="{{ base }}{{ c.Arquivo }}">
-        <div class="titleBox">{{ c.Nome }}</div>
+    <a href="{% url 'busca_cardapio_por_restaurante' %}?restaurante={{ c.PK }}">
+      <div class="box">
+        <div class="boxInner">
+          <img src="#">
+          <div class="titleBox">{{ c.Nome }}</div>
+        </div>
       </div>
-    </div>
+    </a>
     {% endfor %}
   </div>
+
   
   <script type="text/javascript" async="" src="{% static 'cardapio/Galeria_files/linkid.js' %}"></script><script async="" src="{% static 'cardapio/Galeria_files/analytics.js' %}"></script><script type="text/javascript" src="{% static 'cardapio/Galeria_files/jquery-1.js' %}"></script>
   <script type="text/javascript">
