@@ -1,6 +1,6 @@
 *.pyc
 cardapio/migrations/*
 restaurante/migrations/*
-fotosCardapio/*
+static/cardapio/fotosCardapio/*
 
-!fotosCardapio/.gitkeep
+!static/cardapio/fotosCardapio/.gitkeep
