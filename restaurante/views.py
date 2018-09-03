@@ -20,3 +20,4 @@ def busca_restaurante(request):
     for p in restaurantes:
         context.append({"Nome": str(p.nome), "PK": int(p.pk)})
     return HttpResponse(template.render({'context':context}, request))
+
