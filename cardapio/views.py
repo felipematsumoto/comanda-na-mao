@@ -20,7 +20,6 @@ def add_cardapio(request):
             form.save()
             return HttpResponse(status=201)
         else:
-            print("LIXO")
             return JsonResponse(form.errors)
     else:
         return HttpResponse(status=405)
