@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  {% load staticfiles %}
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="{% static 'cardapio/Galeria_files/edit.css' %}">
+  
+  <style type="text/css">
+    body {
+       margin: 0;
+       padding: 0;
+       background: #EEE;
+       font: 10px/13px 'Lucida Sans',sans-serif;
+    }
+    .wrap {
+       overflow: hidden;
+       margin: 10px;
+    }
+    .box {
+       float: left;
+       position: relative;
+       width: 20%;
+       padding-bottom: 20%;
+    }
+    .boxInner {
+       position: absolute;
+       left: 10px;
+       right: 10px;
+       top: 10px;
+       bottom: 10px;
+       overflow: hidden;
+    }
+    .boxInner img {
+       width: 100%;
+    }
+    .boxInner .titleBox {
+       position: absolute;
+       bottom: 0;
+       left: 0;
+       right: 0;
+       margin-bottom: -50px;
+       background: #000;
+       background: rgba(0, 0, 0, 0.5);
+       color: #FFF;
+       padding: 10px;
+       text-align: center;
+       -webkit-transition: all 0.3s ease-out;
+       -moz-transition: all 0.3s ease-out;
+       -o-transition: all 0.3s ease-out;
+       transition: all 0.3s ease-out;
+    }
+    body.no-touch .boxInner:hover .titleBox, body.touch .boxInner.touchFocus .titleBox {
+       margin-bottom: 0;
+    }
+    @media only screen and (max-width : 480px) {
+       /* Smartphone view: 1 tile */
+       .box {
+          width: 100%;
+          padding-bottom: 100%;
+       }
+    }
+    @media only screen and (max-width : 650px) and (min-width : 481px) {
+       /* Tablet view: 2 tiles */
+       .box {
+          width: 50%;
+          padding-bottom: 50%;
+       }
+    }
+    @media only screen and (max-width : 1050px) and (min-width : 651px) {
+       /* Small desktop / ipad view: 3 tiles */
+       .box {
+          width: 33.3%;
+          padding-bottom: 33.3%;
+       }
+    }
+    @media only screen and (max-width : 1290px) and (min-width : 1051px) {
+       /* Medium desktop: 4 tiles */
+       .box {
+          width: 25%;
+          padding-bottom: 25%;
+       }
+    }
+  </style> 
+  
+  <!-- Enable media queries for old IE -->
+  <!--[if lt IE 9]>
+     <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+  <![endif]-->
+  
+</head>
+<center>
+<form id="searchform" action="{% url 'busca_cardapio' %}" method="GET" accept-charset="utf-8">
+  <input name="procura" type="text">
+  <input type="submit"></input>
+</form>
+</center>
+<body class="no-touch">
+  <div class="wrap">
+    {% for c in menu %}
+    {% static "" as base %}
+    <div class="box">
+      <div class="boxInner">
+        <img src="{{ base }}{{ c.Arquivo }}">
+        <div class="titleBox">{{ c.Nome }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <script type="text/javascript" async="" src="{% static 'cardapio/Galeria_files/linkid.js' %}"></script><script async="" src="{% static 'cardapio/Galeria_files/analytics.js' %}"></script><script type="text/javascript" src="{% static 'cardapio/Galeria_files/jquery-1.js' %}"></script>
+  <script type="text/javascript">
+  $(function(){
+     // See if this is a touch device
+     if ('ontouchstart' in window)
+     {
+        // Set the correct body class
+        $('body').removeClass('no-touch').addClass('touch');
+       
+        // Add the touch toggle to show text
+        $('div.boxInner img').click(function(){
+           $(this).closest('.boxInner').toggleClass('touchFocus');
+        });
+     }
+  });
+  </script>
+  
+<script src="{% static 'cardapio/Galeria_files/edit.js' %}"></script>
+<script>jsbinShowEdit && jsbinShowEdit({"static":"http://static.jsbin.com","root":"http://jsbin.com"});</script>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-1656750-34', 'auto');
+ga('require', 'linkid', 'linkid.js');
+ga('require', 'displayfeatures');
+ga('send', 'pageview');
+
+</script>
+
+ 
+</body>
+</html>
