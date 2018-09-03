@@ -2,5 +2,5 @@
 cardapio/migrations/*
 restaurante/migrations/*
 static/cardapio/fotosCardapio/*
-
+comanda_na_mao/settings.py
 !static/cardapio/fotosCardapio/.gitkeep
