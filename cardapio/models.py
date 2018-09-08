@@ -11,11 +11,11 @@ class TipoProduto(models.Model):
 class ProdutoCardapio(models.Model):
     nome = models.CharField(max_length=50)
     descricao = models.CharField(max_length=255)
-<<<<<<< HEAD
+#<<<<<<< HEAD
     foto = models.FileField(upload_to='static/cardapio/fotosCardapio/')
-=======
+#=======
     foto = models.FileField(upload_to='fotosCardapio/')
->>>>>>> 5e08017cb09c5f864a16eb0e9d25f6c71f419de4
+#>>>>>>> 5e08017cb09c5f864a16eb0e9d25f6c71f419de4
     tamanhoEmPessoas = models.IntegerField(default=0)
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     tipoProduto = models.ForeignKey(TipoProduto, on_delete=models.SET_NULL, null=True)

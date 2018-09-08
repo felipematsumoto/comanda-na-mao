@@ -42,3 +42,26 @@ def busca_cardapio_por_restaurante(request):
         print(str(os.path.basename(p.foto.name)))
         menu.append({"Nome": str(p.nome), "Arquivo": "cardapio/fotosCardapio/" + str(os.path.basename(p.foto.name))})
     return HttpResponse(template.render({'menu':menu}, request))
+
+def mostrar_cardapio(request):
+    #checar o restaurante
+    template = loader.get_template("cardapio/GaleriaProduto.html")
+    #Pega produtos por filtro
+    produtos = 0
+    if request.GET.get('procura') == 'Tudo':
+        produtos = cardapio_models.ProdutoCardapio.objects.all()
+    else:
+        produtos = cardapio_models.ProdutoCardapio.objects.all().filter(tipoProduto__nome=request.GET.get('procura'))
+    fimlinha = 0
+    menu = []
+    for p in produtos:
+        menu.append({"Nome": str(p.nome), "Descricao": str(p.descricao), "Tamanho" : int(p.tamanhoEmPessoas), "Preco" : float(p.preco) , "Tipo": str(p.tipoProduto), "Fimlinha": fimlinha, "Arquivo": "cardapio/fotosCardapio/" + str(os.path.basename(p.foto.name))})
+        fimlinha = fimlinha + 1
+        if fimlinha == 3:
+            fimlinha = 0
+    tipos = cardapio_models.TipoProduto.objects.all()
+    botoes = []
+    botoes.append({"Nome": 'Tudo'})
+    for t in tipos:
+        botoes.append({"Nome": str(t.nome)})
+    return HttpResponse(template.render({'menu':menu, 'botoes': botoes}, request))
