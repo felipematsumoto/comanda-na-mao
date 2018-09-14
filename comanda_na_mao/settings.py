@@ -77,9 +77,9 @@ WSGI_APPLICATION = 'comanda_na_mao.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '*',
-	'USER': '*',
-	'PASSWORD': '*',
+        'NAME': 'comanda_na_mao2',
+	'USER': 'root',
+	'PASSWORD': '1306foco',
 	'HOST': 'localhost',
 	'PORT': '3306',
     }

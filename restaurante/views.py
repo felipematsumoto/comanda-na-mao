@@ -1,4 +1,4 @@
-from django.shortcuts import render
+
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -6,7 +6,7 @@ from django.template import loader
 from . import models as restaurante_models
 from .models import Restaurante 
 from .forms import restauranteForm
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from cardapio.views import busca_cardapio, busca_cardapio_por_restaurante
 import os
@@ -17,7 +17,7 @@ def index(request):
     return HttpResponse(template.render({}, request))
 
 @csrf_exempt
-def busca_restaurante(request):
+def busca_restaurante(request):c
     template = loader.get_template("restaurante/Galeria.html")
     restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=request.GET.get('procura'))
     context = []
@@ -25,16 +25,31 @@ def busca_restaurante(request):
         context.append({"Nome": str(p.nome), "PK": int(p.pk)})
     return HttpResponse(template.render({'context':context}, request))
 
-def add_restaurante(request):
-    return render(request,'restaurante/add_restaurante.html')
+def msg(request):
+    return HttpResponse("Restaurante adicionado com sucesso")
 
 def lista_restaurantes(request):
-    restaurante = Restaurante.objects.all()
-    return render(request, 'restaurante/Lista_de_restaurante.html', {'restaurante': restaurante})
 
-def restaurante_novo(request):
-    form = restauranteForm(request.POST,None)
-    if form.is_valid():
-        form.save()
-        return redirect('add_restaurante')
-    return render(request, 'restaurante/restaurante_cadastro.html', {'form':form})
+    if request.method == 'GET':
+        restaurante = Restaurante.objects.all()
+        dic = {}
+        i = 0
+        for aux in restaurante:
+            dic[i] = str(aux.nome)
+            i += 1
+        return JsonResponse(dic)
+    else:
+        return HttpResponse(status=405)
+
+
+def add_restaurante(request):
+    if request.method == 'POST':
+        form = restauranteForm(request.POST or None, request.FILES or None)
+        if form.is_valid():
+            form.save()
+            return HttpResponse(status=201)
+        else:
+            return HttpResponse(form.errors)
+    else:
+        return HttpResponse(status=405)
+

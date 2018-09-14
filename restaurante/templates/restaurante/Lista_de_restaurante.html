@@ -10,7 +10,7 @@
 <body>
     <ul>
         {%for restaurante in restaurante%}
-             <li>{{restaurante.nome}}</li>
+             <li>{restaurante.nome}</li>
         {%endfor%}
     </ul>>
     <a href="{% url 'restaurante_novo' %}">Adicionar Restaurante</a>
