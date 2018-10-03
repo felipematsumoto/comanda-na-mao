@@ -16,6 +16,6 @@ class ProdutoCardapio(models.Model):
     tamanhoEmPessoas = models.IntegerField(default=0)
     preco = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     tipoProduto = models.ForeignKey(TipoProduto, on_delete=models.SET_NULL, null=True)
-    restaurante = models.ForeignKey('restaurante.Restaurante', on_delete=models.CASCADE)
+    restaurante = models.ForeignKey('restaurante.Restaurante', on_delete=models.CASCADE, null=True)
     def __str__(self):
         return self.nome

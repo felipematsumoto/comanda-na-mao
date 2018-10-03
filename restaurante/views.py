@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from . import models as restaurante_models
-from .models import Restaurante 
+from .models import Restaurante
 from .forms import restauranteForm
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -52,4 +52,3 @@ def add_restaurante(request):
             return JsonResponse(form.errors)
     else:
         return HttpResponse(status=405)
-

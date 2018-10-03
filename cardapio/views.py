@@ -5,6 +5,7 @@ from .forms import ProdutoCardapioForm
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from . import models as cardapio_models
+from restaurante import models as restaurante_models
 import os
 
 @csrf_exempt
@@ -71,4 +72,23 @@ def mostrar_cardapio(request):
     data = { "menu": menu , "botoes": botoes} #request.GET.get('restaurante')}
 
 
+    return JsonResponse(data)
+
+@csrf_exempt
+def pegar_tipos(request):
+
+    if request.method == 'GET':
+        tipos = cardapio_models.TipoProduto.objects.all()
+        botoes = []
+        for t in tipos:
+            botoes.append({"Nome": str(t.nome), "Id": t.id})
+
+        rests = restaurante_models.Restaurante.objects.all().filter(dono__login=request.GET.get('login'))
+        restaurantes = []
+        for r in rests:
+            restaurantes.append({"Nome": str(r.nome), "Id": r.id})
+
+
+
+    data = { "tipos": botoes, "restaurantes": restaurantes} #request.GET.get('restaurante')}
     return JsonResponse(data)
