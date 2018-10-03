@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cardapio',
-    'restaurante'
+    'restaurante',
+    'login'
 ]
 
 MIDDLEWARE = [
@@ -77,11 +78,11 @@ WSGI_APPLICATION = 'comanda_na_mao.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': '*',
-	'USER': '*',
-	'PASSWORD': '*',
-	'HOST': '*',
-	'PORT': '*',
+        'NAME': 'comanda_na_mao2',
+	'USER': 'root',
+	'PASSWORD': 'Renan@1995',
+	'HOST': 'localhost',
+	'PORT': '3306',
     }
 }
 

@@ -20,5 +20,6 @@ import restaurante.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cardapio/', include('cardapio.urls')),
-    path('restaurante/', include('restaurante.urls'))
+    path('restaurante/', include('restaurante.urls')),
+    path('login/', include('login.urls'))
 ]
