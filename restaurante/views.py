@@ -22,8 +22,8 @@ def busca_restaurante(request):
     restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=request.GET.get('procura'))
     context = []
     for p in restaurantes:
-        context.append({"Nome": str(p.nome), "PK": int(p.pk)})
-    return HttpResponse(template.render({'context':context}, request))
+        context.append({"Nome": str(p.nome), "PK": int(p.pk), "CNPJ": str(p.cnpj), "nomeDono":str(p.nomeDono), "telefone":str(p.telefone), "endereco":str(p.endereco), "email":str(p.email)})
+    return JsonResponse(context)
 
 def msg(request):
     return HttpResponse("Restaurante adicionado com sucesso")
@@ -53,3 +53,8 @@ def add_restaurante(request):
     else:
         return HttpResponse(status=405)
 
+@csrf_exempt
+def leitura_restaurante(request):
+    p = restaurante_models.Restaurante.objects.get(pk=request.GET.get("id"))
+    context = {"Nome": str(p.nome), "PK": int(p.pk), "CNPJ": str(p.cnpj), "nomeDono":str(p.nomeDono), "telefone":str(p.telefone), "endereco":str(p.endereco), "email":str(p.email)}
+    return JsonResponse(context)
