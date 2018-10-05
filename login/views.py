@@ -26,9 +26,9 @@ def registrar_user(request):
                 user = user_models.Usuario.objects.get(login=username)
                 user.tipoUser = user_models.TipoConta.objects.get(nome=request.POST.get('tipoUser'))
                 user.save()
-                return HttpResponse(status=201)
+                return JsonResponse({'status': 1})
             else:
-                return JsonResponse({'mensagem': 'Login ou email já cadastrado.'})
+                return JsonResponse({'status': 0})
         else:
             return JsonResponse(form.errors)
     else:
@@ -36,13 +36,17 @@ def registrar_user(request):
 
 @csrf_exempt
 def entrar_user(request):
-    if request.method == 'GET':
-        login = request.GET.get('login')
-        password = request.GET.get('senha')
-        if (user_models.Usuario.objects.filter(login=login, senha=password).exists()) or (user_models.Usuario.objects.filter(email=login, senha=password).exists()):
-            return JsonResponse({'mensagem': 'Login efetuado com sucesso'})
+    if request.method == 'POST':
+        login = request.POST.get('login')
+        password = request.POST.get('senha')
+        if user_models.Usuario.objects.filter(login=login, senha=password).exists():
+            obj = user_models.Usuario.objects.get(login=login, senha=password)
+            return JsonResponse({'login': login, 'tipoUser': obj.tipoUser.nome, 'ID': obj.id})
+        elif user_models.Usuario.objects.filter(email=login, senha=password).exists():
+            obj = user_models.Usuario.objects.get(email=login, senha=password)
+            return JsonResponse({'login': login, 'tipoUser': obj.tipoUser.nome, 'ID': obj.id})
         else:
-            return JsonResponse({'mensagem': 'Dados inválidos.'})
+            return JsonResponse({'login': "null"})
     return HttpResponse(status=405)
 
 @csrf_exempt

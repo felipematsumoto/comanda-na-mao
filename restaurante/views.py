@@ -18,12 +18,16 @@ def index(request):
 
 @csrf_exempt
 def busca_restaurante(request):
-    template = loader.get_template("restaurante/Galeria.html")
-    restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=request.GET.get('procura'))
-    context = []
-    for p in restaurantes:
-        context.append({"Nome": str(p.nome), "PK": int(p.pk)})
-    return HttpResponse(template.render({'context':context}, request))
+    if request.method == 'POST':
+        filtro = request.POST.get('procura')
+        if filtro != '':
+            restaurantes = restaurante_models.Restaurante.objects.all()
+        else:
+            restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=filtro)
+        context = []
+        for p in restaurantes:
+            context.append({"Nome": str(p.nome), "PK": int(p.pk)})
+        return JsonResponse({'lista':filtro})
 
 def msg(request):
     return HttpResponse("Restaurante adicionado com sucesso")
