@@ -20,14 +20,16 @@ def index(request):
 def busca_restaurante(request):
     if request.method == 'POST':
         filtro = request.POST.get('procura')
-        if filtro != '':
+        if filtro == '':
             restaurantes = restaurante_models.Restaurante.objects.all()
+        elif request.POST.__contains__('pornome'):
+            restaurantes = restaurante_models.Restaurante.objects.all().filter(dono__login=filtro)
         else:
             restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=filtro)
         context = []
         for p in restaurantes:
-            context.append({"Nome": str(p.nome), "PK": int(p.pk)})
-        return JsonResponse({'lista':filtro})
+            context.append({"Nome": str(p.nome),"Id": str(p.id), "Dono": str(p.nomeDono), "End": str(p.endereco), "Tel": str(p.telefone), "Foto": str(os.path.basename(p.foto.name))})
+        return JsonResponse({"lista": context})
 
 def msg(request):
     return HttpResponse("Restaurante adicionado com sucesso")
