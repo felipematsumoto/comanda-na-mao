@@ -9,37 +9,29 @@ def index(request):
     return JsonResponse({"Teste":10})
 
 @csrf_exempt
-def libera_comanda(request):
-    #Pegar a sessao do usuario
+def libera_comanda(request): #Request -> usuario|mesa|restaurante
     user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
-    print(user.mesa)
-    if(user.mesa != -1):
-        #Realizar pagamento
-        comanda = comanda_models.Comanda.objects.get(mesa=user.mesa)
-        mesa = comanda_models.Mesa.objects.get(numero=user.mesa, restaurante__pk=request.GET.get('restaurante'))
-        comanda.delete()
-        mesa.delete()
-        user.mesa = -1
-        user.comanda = -1
+    if user.mesa: #Caso esteja em uma mesa
+        #fecha_comanda(user.comanda)
+        comanda_models.Comanda.objects.get(mesa=request.GET.get('mesa'), idusuario=user.pk).delete()
+        user.mesa = None
+        user.comanda = None
         user.save()
-        print("<:)")
+        return JsonResponse({"Estado":1})
     else:
-        print(">:(")
-    return JsonResponse({"Teste":20})
+        return JsonResponse({"Estado": 0})
+
 
 @csrf_exempt
-def inicia_comanda(request):
-    # Pegar a sessao do usuario
+def inicia_comanda(request): #Request -> usuario|mesa|restaurante
     user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
-    print(user.mesa)
-    if(user.mesa == -1): #Precisa iniciar uma comanda para este usuario nesta mesa
-        user.mesa = request.GET.get("mesa")
-        mesa = comanda_models.Mesa.objects.get(numero=user.mesa, restaurante__pk=request.GET.get('restaurante'))
-        comanda = comanda_models.Comanda(mesa=mesa)
+    if not user.mesa: #Caso nao esteja em uma mesa
+        mesa = comanda_models.Mesa.objects.get(numero=request.GET.get('mesa'), restaurante__pk=request.GET.get('restaurante'))
+        comanda = comanda_models.Comanda(mesa=mesa, idusuario=user.pk)
         comanda.save()
         user.comanda = comanda
+        user.mesa = mesa
         user.save()
-        print("<:)")
+        return JsonResponse({"Estado":1})
     else:
-        print(">:(")
-    return JsonResponse({"Teste": 30})
+        return JsonResponse({"Estado": 0})

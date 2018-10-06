@@ -10,6 +10,6 @@ class Mesa(models.Model):
 
 class Comanda(models.Model):
     mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE, null=True)
-    #Tirar as referencias de chave para insercao, perdi um tempo desgracado com isso
+    idusuario = models.IntegerField()
     def __str__(self):
         return str(self.pk)
