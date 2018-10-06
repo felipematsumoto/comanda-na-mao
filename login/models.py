@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from comanda import models as comanda_models
+from __future__ import unicode_literals
+from decimal import Decimal
+
 
 class TipoConta(models.Model):
     nome = models.CharField(max_length=50)

@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from . import models as restaurante_models
-from .models import Restaurante 
+from .models import Restaurante
 from .forms import restauranteForm
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -18,12 +18,18 @@ def index(request):
 
 @csrf_exempt
 def busca_restaurante(request):
-    template = loader.get_template("restaurante/Galeria.html")
-    restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=request.GET.get('procura'))
-    context = []
-    for p in restaurantes:
-        context.append({"Nome": str(p.nome), "PK": int(p.pk), "CNPJ": str(p.cnpj), "nomeDono":str(p.nomeDono), "telefone":str(p.telefone), "endereco":str(p.endereco), "email":str(p.email)})
-    return JsonResponse(context)
+    if request.method == 'POST':
+        filtro = request.POST.get('procura')
+        if filtro == '':
+            restaurantes = restaurante_models.Restaurante.objects.all()
+        elif request.POST.__contains__('pornome'):
+            restaurantes = restaurante_models.Restaurante.objects.all().filter(dono__login=filtro)
+        else:
+            restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=filtro)
+        context = []
+        for p in restaurantes:
+            context.append({"Nome": str(p.nome),"Id": str(p.id), "Dono": str(p.nomeDono), "End": str(p.endereco), "Tel": str(p.telefone), "Foto": str(os.path.basename(p.foto.name))})
+        return JsonResponse({"lista": context})
 
 def msg(request):
     return HttpResponse("Restaurante adicionado com sucesso")
