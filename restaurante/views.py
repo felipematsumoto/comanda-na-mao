@@ -58,3 +58,9 @@ def add_restaurante(request):
             return JsonResponse(form.errors)
     else:
         return HttpResponse(status=405)
+
+@csrf_exempt
+def leitura_restaurante(request):
+    p = restaurante_models.Restaurante.objects.get(pk=request.GET.get("id"))
+    context = {"Nome": str(p.nome), "PK": int(p.pk), "CNPJ": str(p.cnpj), "nomeDono":str(p.nomeDono), "telefone":str(p.telefone), "endereco":str(p.endereco), "email":str(p.email)}
+    return JsonResponse(context)
