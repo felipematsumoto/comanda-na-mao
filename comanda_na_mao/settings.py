@@ -67,14 +67,13 @@ WSGI_APPLICATION = 'comanda_na_mao.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'comanda_na_mao2',
-	'USER': 'root',
-	'PASSWORD': 'Renan@1995',
-	'HOST': 'localhost',
+    'NAME': 'atido190_comanda',
+	'USER': 'atido190_comanda',
+	'PASSWORD': 'EngSoft2018',
+	'HOST': 'atido.com.br',
 	'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

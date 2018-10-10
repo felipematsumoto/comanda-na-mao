@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from django.db import models
 from comanda import models as comanda_models
-from __future__ import unicode_literals
 from decimal import Decimal
 
 
@@ -16,7 +16,5 @@ class Usuario(models.Model):
     email = models.CharField(max_length=50, unique=True)
     senha = models.CharField(max_length=20)
     tipoUser = models.ForeignKey(TipoConta, on_delete=models.CASCADE, null=True)
-    comanda = models.ForeignKey(comanda_models.Comanda, on_delete=models.SET_NULL, null=True, blank=True)
-    mesa = models.ForeignKey(comanda_models.Mesa, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return str(self.login)
