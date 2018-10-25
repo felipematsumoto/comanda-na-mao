@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kanban cozinha</title>
+  <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css"> -->
+  <style>
+  body {
+    min-width: 520px;
+  }
+  .column {
+    width: 33%;
+    padding-bottom: 100px;
+  }
+  .portlet {
+    margin: 0 1em 1em 0;
+    padding: 0.3em;
+  }
+  .portlet-header {
+    padding: 0.2em 0.3em;
+    margin-bottom: 0.5em;
+    position: relative;
+  }
+  .portlet-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    margin-top: -8px;
+  }
+  .portlet-content {
+    padding: 0.4em;
+  }
+  .portlet-placeholder {
+    border: 1px dotted black;
+    margin: 0 1em 1em 0;
+    height: 50px;
+  }
+  .card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+    }
+
+    .price {
+      color: grey;
+      font-size: 22px;
+    }
+
+    .card button {
+      border: none;
+      outline: 0;
+      padding: 12px;
+      color: white;
+      background-color: #000;
+      text-align: center;
+      cursor: pointer;
+      width: 100%;
+      font-size: 18px;
+    }
+
+    .card button:hover {
+      opacity: 0.7;
+    }
+  .container {width: 32.5%; float:left; clear: right;margin:5px; border-radius: 5px; height: 920px;}
+  .column {width: 100%;}
+  </style>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+<body>
+<div class="container" style="background-color:#b5d1fc;">
+    <h2>Em espera</h2>
+    <div class="column">
+        <div id="pedidosEmEspera"></div>
+        {%for pedido, valor in dic.items %}
+            {%if valor.Estado == '0' %}
+            <div class="card">
+                <h1>{{valor.Nome_produto}}</h1>
+                <p class="price">{{valor.Tamanho}}</p>
+                <p>{{valor.Comentario}}</p>
+                <form action="{% url 'muda'%}" method= "POST">
+                    {% csrf_token %}
+                        <input type="hidden" name="Transicao" , value="1">
+                        <input type="hidden" name="ID", value="{{valor.ID}}" >
+                    <button type="submit" onload="true">Comecar a preparar</button>
+                </form>
+            </div>
+            {% endif %}
+        {%endfor%}
+    </div>
+</div>
+
+<div class="container" style="background-color:#5494f9;">
+    <h2>Em Andamento</h2>
+    <div class="column">
+        {%for pedido, valor in dic.items %}
+            {%if valor.Estado == '1' %}
+            <div class="card">
+                <h1>{{valor.Nome_produto}}</h1>
+                <p class="price">{{valor.Tamanho}}</p>
+                <p>{{valor.Comentario}}</p>
+                <form action="{% url 'muda'%}" method= "POST">
+                    {% csrf_token %}
+                        <input type="hidden" name="Transicao" , value="2">
+                        <input type="hidden" name="ID", value="{{valor.ID}}" >
+                    <button type="submit" onload="true">Entregar Pedido</button>
+                </form>
+            </div>
+            {% endif %}
+        {%endfor%}
+      </div>
+    </div>
+</div>
+
+<div class="container" style="background-color:#b5d1fc;">
+    <h2>Pronto</h2>
+    <div class="column">
+        {%for pedido, valor in dic.items %}
+            {%if valor.Estado == '2' %}
+            <div class="card">
+                <h1>{{valor.Nome_produto}}</h1>
+                <p class="price">{{valor.Tamanho}}</p>
+                <p>{{valor.Comentario}}</p>
+            </div>
+            {% endif %}
+        {%endfor%}
+      </div>
+    </div>
+</div>
+
+
+</body>
+</html>

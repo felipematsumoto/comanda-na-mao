@@ -10,5 +10,7 @@ urlpatterns = [
     path('cardapio/', include('cardapio.urls')),
     path('restaurante/', include('restaurante.urls')),
     path('comanda/', include('comanda.urls')),
-    path('login/', include('login.urls'))
+    path('login/', include('login.urls')),
+    path('cozinha/', include('cozinha.urls'))
+
 ]

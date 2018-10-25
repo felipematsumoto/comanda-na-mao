@@ -59,7 +59,16 @@ def mostrar_cardapio(request):
     fimlinha = 0
     menu = []
     for p in produtos:
-        menu.append({"Nome": str(p.nome), "Descricao": str(p.descricao), "Tamanho" : int(p.tamanhoEmPessoas), "Preco" : float(p.preco) , "Tipo": str(p.tipoProduto), "Fimlinha": fimlinha, "Arquivo": "/fotosCardapio/" + str(os.path.basename(p.foto.name))})
+        menu.append({
+                     "Nome": str(p.nome),
+                     "Descricao": str(p.descricao),
+                     "Tamanho" : int(p.tamanhoEmPessoas),
+                     "Preco" : float(p.preco) ,
+                     "Tipo": str(p.tipoProduto),
+                     "Fimlinha": fimlinha,
+                     "Arquivo": "/fotosCardapio/" + str(os.path.basename(p.foto.name))
+
+                     })
         fimlinha = fimlinha + 1
         if fimlinha == 3:
             fimlinha = 0
