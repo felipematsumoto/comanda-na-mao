@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'restaurante',
     'login',
     'comanda',
-    'gcm',
+    'cozinha',
+    'gcm'
 ]
 
 MIDDLEWARE = [
@@ -48,7 +49,7 @@ ROOT_URLCONF = 'comanda_na_mao.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,10 +71,10 @@ WSGI_APPLICATION = 'comanda_na_mao.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'atido190_comanda',
-	'USER': 'atido190_comanda',
-	'PASSWORD': 'EngSoft2018',
-	'HOST': 'atido.com.br',
+    'NAME': 'comanda_na_mao2',
+	'USER': 'root',
+	'PASSWORD': '*****',
+	'HOST': 'localhost',
 	'PORT': '3306',
     }
 }

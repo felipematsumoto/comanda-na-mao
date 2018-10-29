@@ -12,5 +12,6 @@ urlpatterns = [
     path('restaurante/', include('restaurante.urls')),
     path('comanda/', include('comanda.urls')),
     path('login/', include('login.urls')),
-    url(r'', include('gcm.urls')),
+    path('cozinha/', include('cozinha.urls')),
+    url(r'', include('gcm.urls'))
 ]
