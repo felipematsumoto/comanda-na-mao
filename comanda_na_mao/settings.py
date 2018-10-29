@@ -15,7 +15,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-GCM_APIKEY = 'AIzaSyA3mBzY7uJtUKfcCgrE3x8BEWpS46Ekd4w'
+GCM_APIKEY = ''
 
 # Application definition
 
