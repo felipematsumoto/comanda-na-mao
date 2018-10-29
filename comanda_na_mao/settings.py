@@ -15,6 +15,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+GCM_APIKEY = ''
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -28,7 +30,8 @@ INSTALLED_APPS = [
     'restaurante',
     'login',
     'comanda',
-    'cozinha'
+    'cozinha',
+    'gcm'
 ]
 
 MIDDLEWARE = [

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import include, url
 import cardapio.views
 import restaurante.views
 import comanda.views
@@ -11,6 +12,6 @@ urlpatterns = [
     path('restaurante/', include('restaurante.urls')),
     path('comanda/', include('comanda.urls')),
     path('login/', include('login.urls')),
-    path('cozinha/', include('cozinha.urls'))
-
+    path('cozinha/', include('cozinha.urls')),
+    url(r'', include('gcm.urls'))
 ]
