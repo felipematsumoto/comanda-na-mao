@@ -15,6 +15,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+GCM_APIKEY = 'AIzaSyA3mBzY7uJtUKfcCgrE3x8BEWpS46Ekd4w'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -27,7 +29,8 @@ INSTALLED_APPS = [
     'cardapio',
     'restaurante',
     'login',
-    'comanda'
+    'comanda',
+    'gcm',
 ]
 
 MIDDLEWARE = [
