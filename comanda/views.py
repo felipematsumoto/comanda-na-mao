@@ -75,3 +75,18 @@ def dividir_pedido(request):
             return JsonResponse(form.errors)
     else:
         return HttpResponse(status=405)
+
+@csrf_exempt
+def lista_pedidos(request):
+    import cardapio.models as cardapio_models
+    import restaurante.models as restaurante_models
+    user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
+    comanda = comanda_models.Comanda.objects.filter(user=user)
+    pedidos = comanda_models.Cota.objects.filter(comanda__in=comanda)
+    print(pedidos)
+    context = {}
+    for p in pedidos:
+        atual = comanda_models.Pedido.objects.get(pk=p.pedido.pk)
+        context.update({atual.pk:{"Custo":atual.custo,"Estado":atual.estado,"Coment":atual.coment,"Foto_Produto":json.dumps(str(atual.produto.foto))}})
+    print(context)
+    return JsonResponse(context)
