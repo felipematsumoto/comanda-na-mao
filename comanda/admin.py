@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 from django.contrib import admin
 
-from .models import Mesa, Comanda
+from .models import Mesa, Comanda, Pedido, Cota
 
 admin.site.register(Mesa)
 admin.site.register(Comanda)
+admin.site.register(Pedido)
+admin.site.register(Cota)

@@ -12,7 +12,7 @@ class Mesa(models.Model):
 class Comanda(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     inicio = models.DateTimeField(null=True)
-    fim = models.DateTimeField(null=True)
+    fim = models.DateTimeField(null=True, blank=True)
     pago = models.BooleanField(default=0)
     mesa = models.ForeignKey(Mesa, on_delete=models.CASCADE, null=True)
     user = models.ForeignKey('login.Usuario', on_delete=models.CASCADE, null=True)

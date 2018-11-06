@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import login.models
+import json
 from . import models as comanda_models
 
 @csrf_exempt
@@ -35,3 +36,17 @@ def inicia_comanda(request): #Request -> usuario|mesa|restaurante
         return JsonResponse({"Estado":1})
     else:
         return JsonResponse({"Estado": 0})
+
+def lista_pedidos(request):
+    import cardapio.models as cardapio_models
+    import restaurante.models as restaurante_models
+    user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
+    comanda = comanda_models.Comanda.objects.filter(user=user)
+    pedidos = comanda_models.Cota.objects.filter(comanda__in=comanda)
+    print(pedidos)
+    context = {}
+    for p in pedidos:
+        atual = comanda_models.Pedido.objects.get(pk=p.pedido.pk)
+        context.update({atual.pk:{"Custo":atual.custo,"Estado":atual.estado,"Coment":atual.coment,"Foto_Produto":json.dumps(str(atual.produto.foto))}})
+    print(context)
+    return JsonResponse(context)
