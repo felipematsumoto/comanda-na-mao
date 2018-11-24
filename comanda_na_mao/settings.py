@@ -71,10 +71,10 @@ WSGI_APPLICATION = 'comanda_na_mao.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql',
-    'NAME': 'comanda_na_mao2',
-	'USER': 'root',
-	'PASSWORD': '*****',
-	'HOST': 'localhost',
+    'NAME': 'atido190_comanda',
+	'USER': 'atido190_comanda',
+	'PASSWORD': 'EngSoft2018',
+	'HOST': 'atido.com.br',
 	'PORT': '3306',
     }
 }
