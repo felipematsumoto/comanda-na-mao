@@ -31,7 +31,6 @@ def busca_cardapio(request):
     produtos = cardapio_models.ProdutoCardapio.objects.all().filter(nome__icontains=request.GET.get('procura'))
     menu = []
     for p in produtos:
-        print(str(os.path.basename(p.foto.name)))
         menu.append({"Nome": str(p.nome), "Arquivo": "cardapio/fotosCardapio/" + str(os.path.basename(p.foto.name))})
     return HttpResponse(template.render({'menu':menu}, request))
 
@@ -41,7 +40,6 @@ def busca_cardapio_por_restaurante(request):
     produtos = cardapio_models.ProdutoCardapio.objects.all().filter(restaurante=request.GET.get('restaurante'))
     menu = []
     for p in produtos:
-        print(str(os.path.basename(p.foto.name)))
         menu.append({"Nome": str(p.nome), "Arquivo": "cardapio/fotosCardapio/" + str(os.path.basename(p.foto.name))})
     return HttpResponse(template.render({'menu':menu}, request))
 
@@ -59,7 +57,7 @@ def mostrar_cardapio(request):
     fimlinha = 0
     menu = []
     for p in produtos:
-        menu.append({
+        menu.append({"Id" : p.id,
                      "Nome": str(p.nome),
                      "Descricao": str(p.descricao),
                      "Tamanho" : int(p.tamanhoEmPessoas),
@@ -73,6 +71,7 @@ def mostrar_cardapio(request):
         if fimlinha == 3:
             fimlinha = 0
     tipos = cardapio_models.TipoProduto.objects.all()
+    print(menu)
     botoes = []
     botoes.append({"Nome": 'Tudo'})
     for t in tipos:

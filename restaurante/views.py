@@ -28,7 +28,17 @@ def busca_restaurante(request):
             restaurantes = restaurante_models.Restaurante.objects.all().filter(nome__icontains=filtro)
         context = []
         for p in restaurantes:
-            context.append({"Nome": str(p.nome),"Id": str(p.id), "Dono": str(p.nomeDono), "End": str(p.endereco), "Tel": str(p.telefone), "Foto": str(os.path.basename(p.foto.name))})
+            context.append({"Nome": str(p.nome),"Id": p.id, "Dono": str(p.nomeDono), "End": str(p.endereco), "Tel": str(p.telefone), "Foto": str(os.path.basename(p.foto.name))})
+        return JsonResponse({"lista": context})
+
+@csrf_exempt
+def busca_restaurante_id(request):
+    if request.method == 'GET':
+        id = request.GET.get('id')
+        restaurante = restaurante_models.Restaurante.objects.get(pk=id)
+        context = []
+        context.append({"Nome": str(restaurante.nome),"Id": restaurante.id, 
+            "Dono": str(restaurante.nomeDono), "End": str(restaurante.endereco), "Tel": str(restaurante.telefone), "Foto": str(os.path.basename(restaurante.foto.name))})
         return JsonResponse({"lista": context})
 
 def msg(request):
