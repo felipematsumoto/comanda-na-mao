@@ -71,7 +71,6 @@ def mostrar_cardapio(request):
         if fimlinha == 3:
             fimlinha = 0
     tipos = cardapio_models.TipoProduto.objects.all()
-    print(menu)
     botoes = []
     botoes.append({"Nome": 'Tudo'})
     for t in tipos:
