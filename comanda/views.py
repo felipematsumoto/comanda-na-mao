@@ -6,6 +6,8 @@ import cardapio.models as cardapio_models
 from . import models as comanda_models
 #from gcm.models import get_device_model
 from .forms import pedidoForm, cotaForm
+from datetime import datetime
+import os
 
 @csrf_exempt
 def index(request):
@@ -27,17 +29,15 @@ def libera_comanda(request): #Request -> usuario|mesa|restaurante
 
 @csrf_exempt
 def inicia_comanda(request): #Request -> usuario|mesa|restaurante
-    user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
-    if not user.mesa: #Caso nao esteja em uma mesa
+    try: #Caso nao esteja em uma mesa
+        exists = comanda_models.Comanda.objects.get(user=request.POST.get('usuario'), pago=0)
+        return JsonResponse({"Estado":0})
+    except comanda_models.Comanda.DoesNotExist:
+        user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
         mesa = comanda_models.Mesa.objects.get(numero=request.GET.get('mesa'), restaurante__pk=request.GET.get('restaurante'))
-        comanda = comanda_models.Comanda(mesa=mesa, idusuario=user.pk)
-        comanda.save()
-        user.comanda = comanda
-        user.mesa = mesa
-        user.save()
-        return JsonResponse({"Estado":1})
-    else:
-        return JsonResponse({"Estado": 0})
+
+        comanda_models.Comanda.objects.create(mesa=mesa, user=user, inicio = datetime.now())
+        return JsonResponse({"Estado": 1})
 
 @csrf_exempt
 def fazer_pedido(request):
@@ -47,13 +47,18 @@ def fazer_pedido(request):
         if form.is_valid():
             #save form
             pedido = form.save()
+            #get Comanda
+            comanda = comanda_models.Comanda.objects.get(user=request.POST.get('user'), pago=0)
+            #Add Cota
+            comanda_models.Cota.objects.create(pedido=pedido,comanda=comanda)
+
             produto = cardapio_models.ProdutoCardapio.objects.get(pk=request.POST.get('produto'))
             user = login.models.Usuario.objects.get(pk=request.POST.get('user'))
             message = 'Deseja dividir ' + produto.nome + ' com ' + user.login + ' por R$ ' + str(produto.preco) + '?'
             #get device
             Device = get_device_model()
             #filter the clients that are in the same table that the order requested
-            clientes_mesa = comanda_models.Comanda.objects.filter(mesa=request.POST.get('mesa'))
+            clientes_mesa = comanda_models.Comanda.objects.filter(mesa=request.POST.get('mesa'), pago=0)
             #Filter the devices that should receive the alert and send the messages and the order number
             Device.objects.filter(dev_id__in=list(clientes_mesa.values_list('user', flat=True))).exclude(dev_id=request.POST.get('user')).send_message({'message':message, 'pedido':pedido.pk})
             return HttpResponse(status=201)
@@ -83,10 +88,11 @@ def lista_pedidos(request):
     user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
     comanda = comanda_models.Comanda.objects.filter(user=user)
     pedidos = comanda_models.Cota.objects.filter(comanda__in=comanda)
-    print(pedidos)
     context = {}
     for p in pedidos:
         atual = comanda_models.Pedido.objects.get(pk=p.pedido.pk)
-        context.update({atual.pk:{"Custo":atual.custo,"Estado":atual.estado,"Coment":atual.coment,"Foto_Produto":json.dumps(str(atual.produto.foto))}})
-    print(context)
+        cota = comanda_models.Cota.objects.filter(pedido=p.pedido.pk).count()
+        custo = round((atual.quantidade*atual.produto.preco)/cota,2)
+        context.update({atual.pk:{"Custo": custo,"Quantidade":atual.quantidade,
+            "Estado":atual.estado,"Nome":atual.produto.nome,"Foto_Produto":"static/cardapio/fotosCardapio/" + str(os.path.basename(atual.produto.foto.name))}})
     return JsonResponse(context)

@@ -65,7 +65,6 @@ def muda_estado_pedido(request):
     if request.method == 'POST':
 
         t = comanda.models.Pedido.objects.get(id=id_aux)
-        print(Transicao_aux)
         t.estado = Transicao_aux
         t.save()
         for pedido in pedidos:
