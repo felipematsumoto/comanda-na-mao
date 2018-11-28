@@ -31,7 +31,9 @@ INSTALLED_APPS = [
     'login',
     'comanda',
     'cozinha',
-    'gcm'
+    'gcm',
+    'caixa',
+    'login_web'
 ]
 
 MIDDLEWARE = [

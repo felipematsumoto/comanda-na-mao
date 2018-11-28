@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 import login.models
 import cardapio.models as cardapio_models
 from . import models as comanda_models
-from gcm.models import get_device_model
+#from gcm.models import get_device_model
 from .forms import pedidoForm, cotaForm
 from datetime import datetime
 import os

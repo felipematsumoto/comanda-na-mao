@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+{% block content %}
+    <div id="content-container" class="container p-none">
+        <div class="lgn-container col-lg-8">
+            <form id="login-form" method="post"
+                  action="{% url 'entrar' %}">
+                {% csrf_token %}
+                <table class="table">
+                    <tr>
+                        <div class  ="input-group col-md-10">
+                        <td><label for="id_username">Usuario</label></td>
+                        <td><input id="id_username" name="login"
+                                   type="text" class="form-control"></td>
+                        </div>
+                    </tr>
+                    <tr>
+                        <div class="input-group col-md-10">
+                        <td><label for="id_password">Senha</label></td>
+                        <td><input id="id_password" name="senha"
+                                   type="password" class="form-control"></td>
+                        </div>
+                    </tr>
+                </table>
+                {% if form.errors %}
+                    <p class=" label label-danger">
+                        Your username and password didn't match.
+                        Please try again.
+                    </p>
+                {% endif %}
+                <div class="custom-file col-md-5">
+                <input type="submit" value="Login"
+                       class="btn btn-primary pull-right" />
+                <input type="hidden" name="next" value="{{ next }}" />
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
