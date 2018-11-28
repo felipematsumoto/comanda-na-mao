@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+{% block content %}
+
+        {% if ID_restaurante == -1 %}
+            <h2>Restaurante ainda não cadastrado!!</h2>
+            <h2>Favor cadastrar um novo restaurante no aplicativo!!</h2>
+        {% endif %}
+
+        {% if ID_restaurante != -1 %}
+            <ul style="list-style-type:none" >
+                <form action="{% url 'envia'%}" method= "GET">
+                    {% csrf_token %}
+                    <input type="hidden" name="ID_restaurante", value="{{ID_restaurante}}" >
+                    <li><button type="submit" class="btn btn-primary">Cozinha</button></li>
+                </form>
+            </ul>
+            <ul style="list-style-type:none" >
+                <form action="{% url 'envia1'%}" method= "GET">
+                    {% csrf_token %}
+                    <input type="hidden" name="ID_restaurante", value="{{ID_restaurante}}" >
+                    <li><button type="submit" class="btn btn-primary">Caixa</button></li>
+                </form>
+            </ul>
+        {% endif %}
+        <form action="{% url 'login'%}" method= "POST">
+            {% csrf_token %}
+            <button type="submit" onload="true">SAIR</button>
+        </form>
+{% endblock content %}

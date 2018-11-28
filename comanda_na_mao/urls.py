@@ -5,6 +5,7 @@ import cardapio.views
 import restaurante.views
 import comanda.views
 import login.views
+import caixa.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,5 +14,7 @@ urlpatterns = [
     path('comanda/', include('comanda.urls')),
     path('login/', include('login.urls')),
     path('cozinha/', include('cozinha.urls')),
-    url(r'', include('gcm.urls'))
+    path('caixa/', include('caixa.urls')),
+    path('web_login/',include('login_web.urls'))
+    #url(r'', include('gcm.urls'))
 ]

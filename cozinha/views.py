@@ -11,35 +11,56 @@ from .forms import aux_Form
 dic = {}
 
 def envia_pedido_para_cozinha(request): #Request -> usuario|mesa|restaurante
+    id_restaurante = request.GET.get('ID_restaurante')
+    pedidos = []
+    mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante)
+    for aux in mesas:
+        comandas = comanda.models.Comanda.objects.filter(mesa = aux)
+        for aux1 in comandas:
+            cotas = comanda.models.Cota.objects.filter(comanda = aux1.id)
+            for aux2 in cotas:
+                pedidos.append( comanda.models.Pedido.objects.filter(id = str(aux2.pedido)))
 
-    pedidos = comanda.models.Pedido.objects.filter()   #Estado igual a 0 o pedido esta em espera, estado igual a 1 o pedido esta em andamenrto e estado igual a 2 pedido esta pronto
+    #pedidos = comanda.models.Pedido.objects.filter()   #Estado igual a 0 o pedido esta em espera, estado igual a 1 o pedido esta em andamenrto e estado igual a 2 pedido esta pronto
 
     if request.method == 'GET':
         dic = {}
         i = 0
-        for aux in pedidos:
 
-            dic[i] = {
+        for pedido in pedidos:
+            for aux in pedido:
+
+                dic[i] = {
                         "Nome_produto": str(cardapio.models.ProdutoCardapio.objects.get(id=aux.produto_id).nome),
                         "Comentario": str(aux.coment),
                         "Tamanho": cardapio.models.ProdutoCardapio.objects.get(id=aux.produto_id).tamanhoEmPessoas,
                         "Estado":str(aux.estado),
-                        "ID":aux.id
+                        "ID":aux.id,
+                        "ID_restaurante": id_restaurante
                         }
-            i += 1
+                i += 1
         return render(request, "kanban.html",{'dic': dic})
     else:
         return HttpResponse(status=405)
 
 
-
 def muda_estado_pedido(request):
+    pedidos = []
+    dic = {}
+    i = 0
 
     id_aux = request.POST.get('ID')
     Transicao_aux = request.POST.get('Transicao')
-    pedidos = comanda.models.Pedido.objects.filter()
-    dic = {}
-    i = 0
+    id_restaurante = request.POST.get('ID_restaurante')
+
+    mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante)
+
+    for aux in mesas:
+        comandas = comanda.models.Comanda.objects.filter(mesa = aux)
+        for aux1 in comandas:
+            cotas = comanda.models.Cota.objects.filter(comanda = aux1.id)
+            for aux2 in cotas:
+                pedidos.append( comanda.models.Pedido.objects.filter(id = str(aux2.pedido)))
 
     if request.method == 'POST':
 
@@ -47,16 +68,18 @@ def muda_estado_pedido(request):
         print(Transicao_aux)
         t.estado = Transicao_aux
         t.save()
-        for aux in pedidos:
+        for pedido in pedidos:
+            for aux in pedido:
 
-            dic[i] = {
+                dic[i] = {
                         "Nome_produto": str(cardapio.models.ProdutoCardapio.objects.get(id=aux.produto_id).nome),
                         "Comentario": str(aux.coment),
                         "Tamanho": cardapio.models.ProdutoCardapio.objects.get(id=aux.produto_id).tamanhoEmPessoas,
                         "Estado":str(aux.estado),
-                        "ID":aux.id
+                        "ID":aux.id,
+                        "ID_restaurante": id_restaurante
                         }
-            i += 1
+                i += 1
         return render(request, "kanban.html",{'dic': dic})
     else:
         return HttpResponse(status=405)

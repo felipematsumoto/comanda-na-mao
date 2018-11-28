@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Caixa</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  <style>
+  body {
+    min-width: 520px;
+  }
+  .column {
+    width: 33%;
+    padding-bottom: 100px;
+  }
+  .container {width: 65%; float:left; clear: right;margin:5px; border-radius: 5px; height: 920px;}
+  .container2 {width: 33%; float:left; clear: right;margin:5px; border-radius: 5px; height: 920px;}
+
+
+  .column {width: 100%;}
+  .list-group-flush .list-group-item{
+    background-color: #b5d1fc;
+    border-top: 1px solid black;
+    /* border-left-color: #fff;
+    border-right-color: #fff; */
+  }
+  .list-group .list-group-item{
+    background-color: #b5d1fc;
+    border-top: 1px solid black;
+    /* border-left-color: #fff;
+    border-right-color: #fff; */
+  }
+
+  </style>
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+</head>
+<body>
+    <!-- Mostrara os detalhes dos pedidos da comanda que foi selecionada -->
+<div class="container" style="background-color:#b5d1fc;">
+    <div class="column">
+        <!-- comanda.nome seria o login do dono da comanda -->
+        <!-- Iterar sobre o dicionario da comanda que voce vai mandar, onde cada item sera um pedido -->
+        {%for chave, elemento in dic.items %}
+          {%if chave == 0%}
+            {%for chave1, elemento1 in elemento.items %}
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{elemento1.Nome_produto}} {{elemento1.Custo}} {{elemento1.Comentario}} {{elemento1.Tamanho}}</li>
+            </ul>
+            {%endfor%}
+          {%endif%}
+
+          {%if chave == 2%}
+            {%for chave2, elemento2 in elemento.items%}
+              <h3>{{elemento2.Nome_usuario}}</h3>
+            {%endfor%}
+          {%endif%}
+          {%if chave == 3%}
+          {%for chave3, elemento3 in elemento.items%}
+            <form action="{% url 'fecha_pedido'%}" method= "POST">
+                {% csrf_token %}
+                    <input type="hidden" name="ID_restaurante" value="{{elemento3.ID_restaurante}}">
+                    <input type="hidden" name="ID" , value="{{elemento3.ID}}">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" onload="true">Fechar Comanda</button>
+            </form>
+            {%endfor%}
+          {%endif%}
+        {%endfor%}
+        <!-- boto para fechar comanda, POST que manda o id da comanda -->
+        <!-- obs:voce precisa me mandar esse id pra eu te mandar de volta -->
+
+
+    </div>
+</div>
+
+<!-- mostrara todos os pedidos que estao abertos -->
+<div class="container2" style="background-color:#93b7f2;">
+    <h2>Comandas Abertas</h2>
+    <div class="list-group" >
+        <!-- itera sobre o dicionario de comandas -->
+        {%for chave, elemento in dic.items %}
+          {%if chave == 1%}
+            {%for chave4, elemento4 in elemento.items%}
+            <form action="{% url 'pega_pedido'%}" method= "POST">
+              {% csrf_token %}
+              <input type="hidden" name="ID", value="{{elemento4.cod_comanda}}">
+              <input type="hidden" name="ID_restaurante", value="{{elemento4.ID_restaurante}}" >
+              <button type="submit" onload="true" class="list-group-item list-group-item-action">{{elemento4.Nome_usuario}}</button>
+            </form>
+            {%endfor%}
+          {%endif%}
+        {%endfor%}
+
+        {%for chave, elemento in dic.items %}
+
+            <!-- MUDAR URL -->
+            <!-- metodo get que manda o cod da comanda que precisa ser aberta na outra "janela" -->
+            <form action="{% url 'pega_pedido'%}" method= "POST">
+                {% csrf_token %}
+                <input type="hidden" name="ID", value="{{elemento.cod_comanda}}">
+                <input type="hidden" name="ID_restaurante", value="{{elemento.ID_restaurante}}" >
+                <button type="submit" onload="true" class="list-group-item list-group-item-action">{{elemento.Nome_usuario}}</button>
+            </form>
+
+        {%endfor%}
+        <form action="{% url 'login'%}" method= "POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg" onload="true">SAIR</button>
+        </form>
+    </div>
+    </div>
+</div>
+
+
+</body>
+</html>

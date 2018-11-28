@@ -31,7 +31,9 @@ INSTALLED_APPS = [
     'login',
     'comanda',
     'cozinha',
-    'gcm'
+    'gcm',
+    'caixa',
+    'login_web'
 ]
 
 MIDDLEWARE = [
@@ -73,7 +75,7 @@ DATABASES = {
     'ENGINE': 'django.db.backends.mysql',
     'NAME': 'comanda_na_mao2',
 	'USER': 'root',
-	'PASSWORD': '*****',
+	'PASSWORD': '1306foco',
 	'HOST': 'localhost',
 	'PORT': '3306',
     }
