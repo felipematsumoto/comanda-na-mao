@@ -26,7 +26,7 @@ class Pedido(models.Model):
     produto = models.ForeignKey('cardapio.ProdutoCardapio', on_delete=models.CASCADE, null=True)
     def __str__(self):
         return str(self.pk)
-
+        
 class Cota(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.SET_NULL, null=True)
     comanda = models.ForeignKey(Comanda, on_delete=models.SET_NULL, null=True)

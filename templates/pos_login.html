@@ -1,30 +1,28 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 
 {% block content %}
-
+        <center> <h2>Escolha uma opção</h2> </center> 
         {% if ID_restaurante == -1 %}
             <h2>Restaurante ainda não cadastrado!!</h2>
             <h2>Favor cadastrar um novo restaurante no aplicativo!!</h2>
         {% endif %}
 
         {% if ID_restaurante != -1 %}
-            <ul style="list-style-type:none" >
                 <form action="{% url 'envia'%}" method= "GET">
                     {% csrf_token %}
                     <input type="hidden" name="ID_restaurante", value="{{ID_restaurante}}" >
-                    <li><button type="submit" class="btn btn-primary">Cozinha</button></li>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Cozinha</button>
                 </form>
-            </ul>
-            <ul style="list-style-type:none" >
-                <form action="{% url 'envia1'%}" method= "GET">
+
+                <form action="{% url 'envia_mesas'%}" method= "GET">
                     {% csrf_token %}
                     <input type="hidden" name="ID_restaurante", value="{{ID_restaurante}}" >
-                    <li><button type="submit" class="btn btn-primary">Caixa</button></li>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Caixa</button>
                 </form>
-            </ul>
+
         {% endif %}
         <form action="{% url 'login'%}" method= "POST">
             {% csrf_token %}
-            <button type="submit" onload="true">SAIR</button>
+            <button type="submit" class="btn-lg btn-block btn-primary"onload="true">SAIR</button>
         </form>
 {% endblock content %}

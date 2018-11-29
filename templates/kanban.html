@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kanban cozinha</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
   <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css"> -->
   <style>
@@ -13,29 +15,6 @@
   .column {
     width: 33%;
     padding-bottom: 100px;
-  }
-  .portlet {
-    margin: 0 1em 1em 0;
-    padding: 0.3em;
-  }
-  .portlet-header {
-    padding: 0.2em 0.3em;
-    margin-bottom: 0.5em;
-    position: relative;
-  }
-  .portlet-toggle {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    margin-top: -8px;
-  }
-  .portlet-content {
-    padding: 0.4em;
-  }
-  .portlet-placeholder {
-    border: 1px dotted black;
-    margin: 0 1em 1em 0;
-    height: 50px;
   }
   .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -49,7 +28,6 @@
       color: grey;
       font-size: 22px;
     }
-
     .card button {
       border: none;
       outline: 0;
@@ -65,12 +43,9 @@
     .card button:hover {
       opacity: 0.7;
     }
-  .container {width: 32.5%; float:left; clear: right;margin:5px; border-radius: 5px; height: 920px;}
+  .container {width: 32.5%; float:left; clear: right;margin:5px; border-radius: 5px; height: 100%;}
   .column {width: 100%;}
   </style>
-
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 </head>
 <body>
@@ -78,12 +53,23 @@
     <h2>Em espera</h2>
     <div class="column">
         <div id="pedidosEmEspera"></div>
-        {%for pedido, valor in dic.items %}
+            {%for pedido, valor in dic.items %}
             {%if valor.Estado == '0' %}
             <div class="card">
                 <h1>{{valor.Nome_produto}}</h1>
-                <p class="price">{{valor.Tamanho}}</p>
+                {% if valor.Tamanho == 1 %}
+                    <p>Tamanho: P</p>
+                {% endif %}
+
+                {% if valor.Tamanho == 2 %}
+                    <p>Tamanho: M</p>
+                {% endif %}
+                {% if valor.Tamanho > 2 %}
+                    <p>Tamanho: G</p>
+                {% endif %}
+                <p>Quantidade: {{valor.Quantidade}}</p>
                 <p>{{valor.Comentario}}</p>
+
                 <form action="{% url 'muda'%}" method= "POST">
                     {% csrf_token %}
                         <input type="hidden"name="ID_restaurante" value="{{valor.ID_restaurante}}">
@@ -104,7 +90,17 @@
             {%if valor.Estado == '1' %}
                 <div class="card">
                     <h1>{{valor.Nome_produto}}</h1>
-                    <p class="price">{{valor.Tamanho}}</p>
+                    {% if valor.Tamanho == 1 %}
+                        <p>Tamanho: P</p>
+                    {% endif %}
+
+                    {% if valor.Tamanho == 2 %}
+                        <p>Tamanho: M</p>
+                    {% endif %}
+                    {% if valor.Tamanho > 2 %}
+                        <p>Tamanho: G</p>
+                    {% endif %}
+                    <p>Quantidade: {{valor.Quantidade}}</p>
                     <p>{{valor.Comentario}}</p>
                     <form action="{% url 'muda'%}" method= "POST">
                         {% csrf_token %}
@@ -127,13 +123,39 @@
             {%if valor.Estado == '2' %}
             <div class="card">
                 <h1>{{valor.Nome_produto}}</h1>
-                <p class="price">{{valor.Tamanho}}</p>
-                <p>{{valor.Comentario}}</p>
+                {% if valor.Tamanho == 1 %}
+                    <p>Tamanho: P</p>
+                {% endif %}
+
+                {% if valor.Tamanho == 2 %}
+                    <p>Tamanho: M</p>
+                {% endif %}
+                {% if valor.Tamanho > 2 %}
+                    <p>Tamanho: G</p>
+                {% endif %}
+                <p  class="price">Entregar Mesa: {{valor.Mesa}}</p>
+
             </div>
             {% endif %}
         {%endfor%}
       </div>
     </div>
+    <div>
+      {%for pedido, valor in dic.items %}
+        {%if pedido == 0 %}
+          <form action="{% url 'envia_mesas'%}" method= "GET">
+              {% csrf_token %}
+              <input type="hidden" name="ID_restaurante", value="{{valor.ID_restaurante}}" >
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Caixa</button>
+          </form>
+          {% endif %}
+      {% endfor %}
+      <form action="{% url 'login'%}" method= "POST">
+          {% csrf_token %}
+          <button type="submit" class="btn-lg btn-block btn-primary"onload="true">SAIR</button>
+      </form>
+
+   </div>
 </div>
 
 

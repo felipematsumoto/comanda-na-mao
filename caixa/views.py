@@ -9,108 +9,172 @@ import cardapio.models
 
 dic = {}
 
-def envia_comandas_com_pedidos_para_caixa(request): #Request
-    dic = {}
+def envia_mesas(request):
+
     i = 0
+    dic = {}
+    Id_mesas = []
+    comandas = []
+
+    if request.method == 'GET':
+        id_restaurante = request.GET.get('ID_restaurante')
+        mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante)
+
+        for aux in mesas:
+            comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
+
+        for comand in comandas:
+            for aux in comand:
+                if aux.mesa not in Id_mesas:
+                    Id_mesas.append(aux.mesa)
+
+        for aux in Id_mesas:
+            dic[i] = {
+                    "ID_mesa":  aux.id,
+                    "N_mesa":  aux.numero,
+                    "ID_restaurante": id_restaurante
+                    }
+            i += 1
+
+        return render(request, "caixa_mesa.html",{'dic': dic})
+    else:
+        return HttpResponse()
+
+
+def envia_comandas_em_aberto(request): #Request
+
+    comandas = []
+    dic = {}
+    i = 1
 
     id_restaurante = request.GET.get('ID_restaurante')
-    comandas = []
-    mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante)
+    id_mesa = request.GET.get('ID_mesa')
+    mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante, id = id_mesa)
+
+    dic[0] = {
+            "ID_restaurante": id_restaurante
+            }
+
     for aux in mesas:
         comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
 
     if request.method == 'GET':
         for comand in comandas:
             for aux in comand:
+
                 if(aux.pago == 0):
                     dic[i] = {
                             "cod_comanda":  aux.id,
                             "Nome_usuario":  x.Usuario.objects.get(id=aux.user_id).login,
-                            "ID_restaurante": id_restaurante
+                            "ID_restaurante": id_restaurante,
+                            "ID_mesa": id_mesa
                             }
                     i += 1
-            return render(request, "caixa.html",{'dic': dic})
+        return render(request, "caixa_Comandas_abertas.html",{'dic': dic})
     else:
         return HttpResponse(status=405)
 
+def calcula_preco(id_pedido):
+
+    i = 0
+
+    cotas = comanda.models.Cota.objects.filter(pedido = id_pedido)
+    qtd = comanda.models.Pedido.objects.get(id=str(id_pedido)).quantidade
+    preco = cardapio.models.ProdutoCardapio.objects.get(id=comanda.models.Pedido.objects.get(id=str(id_pedido)).produto_id).preco
+
+    for aux in cotas:
+        i = 1 + i
+
+    tam = i
+
+    return (preco*qtd)/tam
+
 def mostra_pedido(request):
+
+    comandas = []
     dic = {}
     dic1 = {}
     dic2 = {}
     dic3 = {}
     dic4 = {}
-    comandas = []
+    total = 0
     i = 0
-    id_restaurante = request.POST.get('ID_restaurante')
-    id_aux = request.POST.get('ID')
-    cotas = comanda.models.Cota.objects.filter()
-    mesas = comanda.models.Mesa.objects.filter(restaurante = 1)
 
-    for aux in mesas:
-        comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
+    id_restaurante = request.POST.get('ID_restaurante')
+    id_comanda = request.POST.get('ID_comanda')
+    id_mesa = request.POST.get('ID_mesa')
+    cotas = comanda.models.Cota.objects.filter(comanda = id_comanda)
+    mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante, id = id_mesa)
 
     if request.method == 'POST':
-        for aux1 in cotas:
 
-            if(str(aux1.comanda_id) == str(id_aux)):
-                pedido = aux1.pedido_id
-                comanda_aux = aux1.comanda_id
+        if cotas.exists():
+            for aux in cotas:
+                id_pedido = aux.pedido
+                id_comanda = aux.comanda
+                preco = calcula_preco(id_pedido)
                 dic1[i] = {
-                      # "ID_comanda" :  comanda.models.Comanda.objects.get(id=comanda_aux).id,
-                      # "Nome_usuario":  x.Usuario.objects.get(id=comanda.models.Comanda.objects.get(id=comanda_aux).user_id).login,
-                      "Nome_produto": cardapio.models.ProdutoCardapio.objects.get(id=comanda.models.Pedido.objects.get(id=pedido).produto_id).nome,
-                      "Comentario": comanda.models.Pedido.objects.get(id=pedido).coment,
-                      "Tamanho": cardapio.models.ProdutoCardapio.objects.get(id=comanda.models.Pedido.objects.get(id=pedido).produto_id).tamanhoEmPessoas,
-                      "Custo": comanda.models.Pedido.objects.get(id=pedido).custo   #verificar se o custo já esta dividido entre as pessoas da mesa
+                              "Preco": preco,
+                              "Nome_produto": cardapio.models.ProdutoCardapio.objects.get(id=comanda.models.Pedido.objects.get(id=str(id_pedido)).produto_id).nome,
+                              "Comentario": comanda.models.Pedido.objects.get(id=str(id_pedido)).coment,
+                              "Quantidade": comanda.models.Pedido.objects.get(id=str(id_pedido)).quantidade,
+                              "Tamanho": cardapio.models.ProdutoCardapio.objects.get(id=comanda.models.Pedido.objects.get(id=str(id_pedido)).produto_id).tamanhoEmPessoas
+
                         }
+                total = preco + total
                 i += 1
 
-        i = 0
-
-        for comand in comandas:
-            for aux in comand:
-                if(aux.pago == 0):
-                    dic2[i] = {
-                           "cod_comanda":  aux.id,
-                           "Nome_usuario":  x.Usuario.objects.get(id=aux.user_id).login
-                            }
-
-                    i += 1
-        dic3[0] = {
-                    "Nome_usuario": x.Usuario.objects.get(id=comanda.models.Comanda.objects.get(id=comanda_aux).user_id).login,
-                    }
-
-        dic4[0] = {
-                    "ID":id_aux,
-                    "ID_restaurante": id_restaurante
-                  }
+            dic[0] = dic1
+            i = 0
 
 
-        print()
-        dic[0] = dic1
-        dic[1] = dic2
-        dic[2] = dic3
-        dic[3] = dic4
-        print()
-        print("Esse primeiro dicionario guarda todos os pedidos de uma comanda")
-        print()
-        print(dic1)
-        print()
-        print("Esse segundo dicionario guarda os pedidos em aberto ")
-        print()
-        print(dic2)
-        print()
-        print("Esse terceiro dicionario guarda o id da comanda")
-        print()
-        print(dic3)
+            for aux in mesas:
+                comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
 
-        print()
-        print("Esse dicionario é o que sera enviado por jss, ele contem os dic anteriores respectivamente")
-        print()
-        print(dic)
-        print()
+            for comand in comandas:
+                for aux in comand:
+                    if(aux.pago == 0):
+                        dic2[i] = {
+                                   "cod_comanda":  aux.id,
+                                   "Nome_usuario":  x.Usuario.objects.get(id=aux.user_id).login,
+                                   "ID_restaurante": id_restaurante,
+                                   "ID_mesa": id_mesa
+                                  }
+                        i += 1
+            dic[1] = dic2
 
-        return render(request, "caixa.html",{'dic': dic})
+            dic[2] = {
+                      "ID_comanda": id_comanda.id,
+                      "ID_restaurante": id_restaurante,
+                      "ID_mesa": id_mesa,
+                      "total":total
+                     }
+
+            return render(request, "detalhes_pedido.html",{'dic': dic})
+        else:
+            dic[0] = {}
+            for aux in mesas:
+                comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
+
+            for comand in comandas:
+                for aux in comand:
+                    if(aux.pago == 0):
+                        dic2[i] = {
+                                   "cod_comanda":  aux.id,
+                                   "Nome_usuario":  x.Usuario.objects.get(id=aux.user_id).login,
+                                   "ID_restaurante": id_restaurante,
+                                   "ID_mesa": id_mesa
+                                  }
+                        i += 1
+            dic[1] = dic2
+
+            dic[2] = {
+                      #"ID_comanda": id_comanda.id,
+                      "ID_restaurante": id_restaurante,
+                      "ID_mesa": id_mesa
+                     }
+            return render(request, "detalhes_pedido.html",{'dic': dic})
+
     else:
         return HttpResponse(status=405)
 
@@ -118,32 +182,43 @@ def mostra_pedido(request):
 def fecha_pedido(request):
 
         comandas = []
+        Id_mesas = []
         dic = {}
         i = 0
 
-        id_aux = request.POST.get('ID')
+        id_mesa = request.POST.get('ID_mesa')
+        id_comanda = request.POST.get('ID_comanda')
         id_restaurante = request.POST.get('ID_restaurante')
         print(id_restaurante)
-        mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante)
+        mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante, id = id_mesa)
 
         for aux in mesas:
             comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
-        print(comandas)
+
         if request.method == 'POST':
 
-            t = comanda.models.Comanda.objects.get(id=id_aux)
+            t = comanda.models.Comanda.objects.get(id=id_comanda)
             t.pago = 1
             t.save()
 
+            mesas = comanda.models.Mesa.objects.filter(restaurante = id_restaurante)
+
+            for aux in mesas:
+                comandas.append( comanda.models.Comanda.objects.filter(mesa = aux))
+
             for comand in comandas:
                 for aux in comand:
+                    if aux.mesa not in Id_mesas:
+                        Id_mesas.append(aux.mesa)
 
-                    if(aux.pago == 0):
-                        dic[i] = {
-                                "cod_comanda":  aux.id,
-                                "Nome_usuario":  x.Usuario.objects.get(id=aux.user_id).login
-                                }
-                        i += 1
-            return render(request, "caixa.html",{'dic': dic})
+            for aux in Id_mesas:
+                dic[i] = {
+                        "ID_mesa":  aux.id,
+                        "N_mesa":  aux.numero,
+                        "ID_restaurante": id_restaurante
+                        }
+                i += 1
+
+            return render(request, "caixa_mesa.html",{'dic': dic})
         else:
             return HttpResponse(status=405)
