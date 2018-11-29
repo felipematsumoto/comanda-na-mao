@@ -78,7 +78,9 @@ def muda_estado_pedido(request):
         t.save()
         for pedido in pedidos:
             for aux in pedido:
-
+                mesas = comanda.models.Cota.objects.filter(pedido = aux.id)
+                for aux1 in mesas :
+                    mesa = aux1.comanda.mesa
                 dic[i] = {
                         "Nome_produto": str(cardapio.models.ProdutoCardapio.objects.get(id=aux.produto_id).nome),
                         "Comentario": str(aux.coment),
@@ -86,7 +88,7 @@ def muda_estado_pedido(request):
                         "Estado":str(aux.estado),
                         "ID":aux.id,
                         "Quantidade": aux.quantidade,
-                        "Mesa": comanda.models.Cota.objects.get(pedido = aux.id).comanda.mesa,  "Mesa": comanda.models.Cota.objects.get(pedido = aux.id).comanda.mesa,
+                        "Mesa": mesa,
                         "ID_restaurante": id_restaurante
                         }
                 i += 1
