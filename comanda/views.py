@@ -18,6 +18,13 @@ def libera_comanda(request): #Request -> usuario|mesa|restaurante
     user = login.models.Usuario.objects.get(login=request.GET.get('usuario'))
     if user.mesa: #Caso esteja em uma mesa
         #fecha_comanda(user.comanda)
+        #----------Pagamento---------
+
+        comanda = comanda_models.Comanda.objects.get(mesa=request.GET.get('mesa'), idusuario=user.pk)
+        comanda.pago = 1
+        comanda.save()
+
+        #----------Pagamento---------
         comanda_models.Comanda.objects.get(mesa=request.GET.get('mesa'), idusuario=user.pk).delete()
         user.mesa = None
         user.comanda = None
